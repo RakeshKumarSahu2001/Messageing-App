@@ -1,8 +1,21 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import bcrypt from "bcrypt";
 // import { Account } from "./account.model";
 
-const userSchema=new mongoose.Schema({
+interface IUser{
+    name:string;
+    email:string;
+    image?:string;
+    hashedPassword:string;
+    
+}
+interface IUserMethods {
+    isPasswordCorrect(password:string):Promise<boolean>;
+  }
+// Create a new Model type that knows about IUserMethods...
+type UserModel = Model<IUser, {}, IUserMethods>;
+
+const userSchema=new mongoose.Schema<IUser,UserModel,IUserMethods>({
     name:{
         type:String,
         require:true
@@ -46,6 +59,10 @@ userSchema.pre("save",async function(next){
     next();
 })
 
-export const User=mongoose.model("User",userSchema) 
+userSchema.methods.isPasswordCorrect=async function(password:string) {
+    return await bcrypt.compare(password,this.hashedPassword)
+}
+
+export const User=mongoose.model<IUser,UserModel>("User",userSchema) 
 
 
