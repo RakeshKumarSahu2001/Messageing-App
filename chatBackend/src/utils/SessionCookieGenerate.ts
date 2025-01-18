@@ -3,14 +3,12 @@ import jwt from "jsonwebtoken";
 
 function SessionCookieGenerate(id: string, email: string): string {
     try {
-        const jwtSecret = process.env.JWT_SECRET;
-        const jwtAlgorithm = process.env.JWT_ALGORITHM;
+        const jwtSession = jwt.sign(
+            { id, email, exp: Math.floor(Date.now() / 1000) + 60 * 60 },
+            process.env.JWT_SECRET as string,
+            { algorithm: process.env.JWT_ALGORITHM as jwt.Algorithm }
+        );
 
-        // Check if the required environment variables are set
-        if (!jwtSecret) {
-            console.log("cant found secret...")
-        }
-        const jwtSession = jwt.sign({ id, email }, jwtSecret, jwtAlgorithm);
         return jwtSession;
     } catch (error) {
         throw new ErrorHandler({

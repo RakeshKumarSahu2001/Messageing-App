@@ -32,14 +32,24 @@ export const userRegister = AsyncHandler(async (req, res) => {
             }
         })
     } catch (error: unknown) {
-        throw new ErrorHandler({
-            status: 500,
-            message: "Something went wrong",
-            success: false
+        if (error instanceof ErrorHandler) {
+            throw error;
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong...",
+            status: 500
         })
     }
 })
 
+
+const cookieParams = {
+    secure: true,
+    httpOnly: true,
+    expires: new Date(Date.now() / 1000 + 24 * 60 * 60 * 1000)
+}
 
 export const userLogin = AsyncHandler(async (req, res) => {
     const { email, password } = req.body;
@@ -53,9 +63,8 @@ export const userLogin = AsyncHandler(async (req, res) => {
                 success: false
             })
         }
-        
-        const isPasswordCorrect = await user.isPasswordCorrect(password);
-        console.log(user,password,isPasswordCorrect);
+
+        const isPasswordCorrect = await user?.isPasswordCorrect(password);
 
         if (!isPasswordCorrect) {
             throw new ErrorHandler({
@@ -65,25 +74,37 @@ export const userLogin = AsyncHandler(async (req, res) => {
             })
         }
 
-        const sessionCookie=SessionCookieGenerate(user?.id,user?.email);
+        const sessionCookie = SessionCookieGenerate(user?.id, user?.email);
 
-
-        return res.cookie("sessionCookie",sessionCookie).status(200).json({
-            success: true,
-            message: "Login Successfully...",
-            status: 200,
-            data: {
-                id: user._id,
-                email: user.email
-            }
-        })
+        return res.cookie("sessionCookie", sessionCookie, cookieParams)
+            .status(200)
+            .json({
+                success: true,
+                message: "Login Successfully...",
+                status: 200,
+                data: {
+                    id: user._id,
+                    email: user.email
+                }
+            })
 
 
     } catch (error) {
-        throw new ErrorHandler({
-            status: 500,
+        if (error instanceof ErrorHandler) {
+            throw error;
+        }
+        return res.status(500).json({
+            success: false,
             message: "Something went wrong...",
-            success: false
+            status: 500
         })
     }
+})
+
+export const chat = AsyncHandler(async (req, res) => {
+    res.status(200).json({
+        message: "hello from the server",
+        success: true,
+        status: 200
+    })
 })
