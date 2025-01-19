@@ -48,7 +48,7 @@ export const userRegister = AsyncHandler(async (req, res) => {
 const cookieParams = {
     secure: true,
     httpOnly: true,
-    expires: new Date(Date.now() / 1000 + 24 * 60 * 60 * 1000)
+    // expires: new Date(Date.now() / 1000 + 24 * 60 * 60 * 1000)
 }
 
 export const userLogin = AsyncHandler(async (req, res) => {
@@ -97,6 +97,25 @@ export const userLogin = AsyncHandler(async (req, res) => {
             success: false,
             message: "Something went wrong...",
             status: 500
+        })
+    }
+})
+
+export const userLogout = AsyncHandler(async (req, res) => {
+    try {
+        return res.clearCookie("sessionCookie", cookieParams).status(200).json({
+            success: true,
+            message: "logout successfully.",
+            status: 200
+        })
+    } catch (error) {
+        if (error instanceof ErrorHandler) {
+            throw error;
+        }
+        return res.status(500).json({
+            success: false,
+            status: 500,
+            message: "Something went wrong on the logout section..."
         })
     }
 })
