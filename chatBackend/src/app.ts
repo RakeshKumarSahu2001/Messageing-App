@@ -20,7 +20,11 @@ app.use(cookieParser());
 //user routes
 import userRoutes from "./routes/user.routes"
 import ErrorHandler from "./utils/ErrorHandler";
-app.use("/api/v1/users", userRoutes)
+app.use("/api/v1/users", userRoutes);
+
+//message routes
+import messageRoutes from "./routes/message.routes"
+app.use("/api/v1/message",messageRoutes);
 
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
