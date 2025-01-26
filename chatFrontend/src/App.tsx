@@ -6,12 +6,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 const Register = lazy(() => import('./Components/Register'));
 const Login = lazy(() => import('./Components/Login'));
 const HomePage = lazy(() => import('./Pages/HomePage'));
-const ProfilePage = lazy(()=>import('./Pages/ProfilePage'));
-const SettingPage =lazy(()=>import('./Pages/SettingPage'));
+const ProfilePage = lazy(() => import('./Pages/ProfilePage'));
+const SettingPage = lazy(() => import('./Pages/SettingPage'));
 
-const fallBackUi=()=>{
+const fallBackUi = () => {
   return <>
-  <div>Loading...</div>
+    <div>Loading...</div>
   </>
 }
 
@@ -21,7 +21,7 @@ function App() {
     {
       path: "/",
       Component: HomePage,
-      HydrateFallback:fallBackUi,
+      HydrateFallback: fallBackUi,
       children: [
         {
           path: "/register",
@@ -32,12 +32,12 @@ function App() {
           Component: Login
         },
         {
-          path:"/setting",
-          Component:SettingPage
+          path: "/setting",
+          Component: SettingPage
         },
         {
-          path:"/profile",
-          Component:ProfilePage 
+          path: "/profile",
+          Component: ProfilePage
         }
       ]
     }
@@ -45,13 +45,13 @@ function App() {
 
   return (
     <>
-    <Suspense fallback={<div>Loading app...</div>}>
+      <Suspense fallback={<div>Loading app...</div>}>
 
-      <RouterProvider router={route} />
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
-    </Suspense>
+        <RouterProvider router={route} />
+        <h1 className="text-3xl font-bold underline">
+          Hello world!
+        </h1>
+      </Suspense>
     </>
   )
 }
