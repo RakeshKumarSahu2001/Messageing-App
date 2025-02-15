@@ -2,9 +2,9 @@ import { lazy, Suspense } from 'react';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-
 const Register = lazy(() => import('./Components/Register'));
 const Login = lazy(() => import('./Components/Login'));
+const IndexPage=lazy(()=>import("./Pages/IndexPage"))
 const HomePage = lazy(() => import('./Pages/HomePage'));
 const ProfilePage = lazy(() => import('./Pages/ProfilePage'));
 const SettingPage = lazy(() => import('./Pages/SettingPage'));
@@ -20,11 +20,11 @@ function App() {
   const route = createBrowserRouter([
     {
       path: "/",
-      Component: HomePage,
+      Component: IndexPage,
       HydrateFallback: fallBackUi,
       children: [
         {
-          path: "/register",
+          path: "/",
           Component: Register
         },
         {
@@ -38,6 +38,10 @@ function App() {
         {
           path: "/profile",
           Component: ProfilePage
+        },
+        {
+          path:"/home",
+          Component:HomePage
         }
       ]
     }
@@ -48,9 +52,6 @@ function App() {
       <Suspense fallback={<div>Loading app...</div>}>
 
         <RouterProvider router={route} />
-        <h1 className="text-3xl font-bold underline">
-          Hello world!
-        </h1>
       </Suspense>
     </>
   )

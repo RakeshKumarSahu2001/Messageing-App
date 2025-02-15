@@ -1,5 +1,5 @@
 import mongoose, { Model } from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 interface IUser{
     name:string;

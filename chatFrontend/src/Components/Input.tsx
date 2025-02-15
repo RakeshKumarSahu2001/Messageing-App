@@ -2,6 +2,7 @@ import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import clsx from "clsx";
 
 
+
 interface InputPropsType {
     label: string;
     id: string;
@@ -11,11 +12,12 @@ interface InputPropsType {
     errors: FieldErrors;
     disabled?: boolean;
     autoComplete: string;
-    validate?:(value:string)=>boolean | string;
+    validate?: (value: string) => boolean | string;
     icon?: JSX.Element;
 }
 
-function Input({ label, id, type, required, register, errors, disabled, autoComplete,validate,icon }: InputPropsType) {
+function Input({ label, id, type, required, register, errors, disabled, autoComplete, validate, icon }: InputPropsType) {
+
     return (
         <div>
             <label
@@ -31,8 +33,8 @@ function Input({ label, id, type, required, register, errors, disabled, autoComp
                     autoComplete={autoComplete}
                     {
                     ...register(id, {
-                        required:required,
-                        validate:validate
+                        required: required,
+                        validate: validate
                     })
                     }
                     className="grow"

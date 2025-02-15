@@ -3,25 +3,34 @@ import Input from "./Input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import useAuthStore from "../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 
-type inputs={
-  name:string,
-  email:string,
-  password:string,
-  confPassword:string
+type inputs = {
+  name: string,
+  email: string,
+  password: string,
+  confPassword: string
 }
 
 function Register() {
-  const { register, watch,reset, handleSubmit, formState: { errors } } = useForm<inputs>();
+  const { register, watch, reset, handleSubmit, formState: { errors } } = useForm<inputs>();
 
-  const {isRegistered,registerAction}=useAuthStore();
+  const { isRegistered, registerAction } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    if (isRegistered) {
+      navigate("/login")
+    }
+  },[isRegistered])
 
   const onSubmit: SubmitHandler<inputs> = async (data) => {
     await registerAction(data);
     reset();
   }
-  
+
   return (
     <div className="min-h-screen flex flex-col justify-center items-center py-12 sm:px-6 l:px- bg-gray-100">
       <div className="sm:mx-auto sm:w-full sm:max-w-md my-10">
@@ -42,7 +51,7 @@ function Register() {
             autoComplete="off"
             required="Name field is required"
             icon={<FontAwesomeIcon icon={faUser} />}
-             />
+          />
 
           <Input
             id="email"
@@ -71,10 +80,10 @@ function Register() {
             register={register}
             errors={errors}
             autoComplete="off"
-            validate={(value:string)=>value===watch("password") || "Confirm password must be same as password"}
+            validate={(value: string) => value === watch("password") || "Confirm password must be same as password"}
             required="Confirm Password field is required"
             icon={<FontAwesomeIcon icon={faLock} />}
-             />
+          />
           <div>
             <button
               className="btn btn-primary"

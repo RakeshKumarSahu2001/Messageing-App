@@ -17,17 +17,17 @@ type userInfoProp = {
     name: string,
     email: string,
     password: string,
-    confPassword: string
+    confPassword?: string
 }
 
 interface AuthSlice {
     authUser: authUser | null;
     isRegistered: boolean;
-
+    isLoggedIn:boolean;
     // actions
-    registerAction: (data:userInfoProp) => void;
-    loginAction: (data:loginProps) => void;
-    logoutAction: () => void;
+    registerAction: (data: userInfoProp) => Promise<void>;
+    loginAction: (data: loginProps) => Promise<void>;
+    logoutAction: () => Promise<void>;
 }
 
 
@@ -36,38 +36,42 @@ const useAuthStore = create<AuthSlice>((set) => {
         authUser: null,
         isRegistered: false,
         isLoggedIn: false,
+
         // isUpdatedProfile:false,
 
         // isCheckingAuth:true,
 
         registerAction: async (data: userInfoProp) => {
             try {
-                const response = await axiosInstance.post("users/register", data);
+                const response = await axiosInstance.post("/users/register", data);
 
                 console.log("response", response)
                 if (response?.data?.success) {
                     set({ authUser: response.data, isRegistered: response?.data?.success })
                 }
-                set({isRegistered:false})
+                set({ isRegistered: false })
             } catch (error) {
                 console.log("zustand error", error);
                 set({ authUser: null, isRegistered: false })
             }
         },
         loginAction: async (data: loginProps) => {
-            console.log("data on the login props : ",data);
+            console.log("data on the login props : ", data);
             try {
-                const response = await axiosInstance.post("users/login", data);
+                const response = await axiosInstance.post("/users/login", data);
                 console.log("login response ", response);
+                if (response?.data?.success) {
+                    set({ authUser: response?.data, isLoggedIn:response?.data?.success })
+                }
             } catch (error) {
                 console.log(error);
-                set({ isLoggedIn: false });
+                set({ authUser:null ,isLoggedIn: false });
             }
         },
 
         logoutAction: async () => {
             try {
-                const response = await axiosInstance.post("users/logout");
+                const response = await axiosInstance.post("/users/logout");
 
                 console.log("logout response :", response);
             } catch (error) {

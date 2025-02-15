@@ -5,6 +5,8 @@ import SessionCookieGenerate from "../utils/SessionCookieGenerate";
 
 export const userRegister = AsyncHandler(async (req, res) => {
     const { email, name, password } = req.body;
+
+    console.log("user info : ",req.body);
     try {
         const isUserExist = await User.findOne({ email });
 
@@ -43,7 +45,6 @@ export const userRegister = AsyncHandler(async (req, res) => {
         })
     }
 })
-
 
 const cookieParams = {
     secure: true,
