@@ -25,7 +25,8 @@ const userSchema=new mongoose.Schema<IUser,UserModel,IUserMethods>({
         unique:true
     },
     image:{
-        type:String
+        type:String,
+        default:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
     },
     hashedPassword:{
         type:String,
@@ -58,7 +59,8 @@ userSchema.pre("save",async function(next){
     next();
 })
 
-userSchema.methods.isPasswordCorrect=async function(password:string) {
+
+userSchema.methods.isPasswordCorrect=async function(  this: IUser,password:string) {
     return await bcrypt.compare(password,this.hashedPassword)
 }
 

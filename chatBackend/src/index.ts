@@ -5,8 +5,9 @@ dotenv.config({path:"./.env"})
 // import cluster from "cluster";
 // import os from "os";
 
-import app from "./app";
 import DBConnection from "./utils/DBConnection";
+// import { server } from "./utils/socket";
+import {server} from "./app"
 
 // const httpServer =http.createServer(app);
 // const io=new Server(httpServer)
@@ -28,7 +29,7 @@ DBConnection(process.env.DBCONNECTION_URL as string)
     //         cluster.fork();
     //     })
     // }else{
-        app.listen(port,()=>{
+        server.listen(port,()=>{
             console.log("listening port "+port)
         })
     // }

@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import useAuthStore from './store/useAuthStore';
 
 const Register = lazy(() => import('./Components/Register'));
 const Login = lazy(() => import('./Components/Login'));
@@ -16,6 +17,8 @@ const fallBackUi = () => {
 }
 
 function App() {
+  const {onlineUsers}=useAuthStore();
+  console.log("online users :",onlineUsers);
 
   const route = createBrowserRouter([
     {

@@ -17,6 +17,7 @@ const auth = AsyncHandler(async (req: Request, res: Response, next: NextFunction
     try {
         const decodedInfo = jwt.verify(sessionToken, String(process.env.JWT_SECRET)) as JwtPayload;
 
+
         if (!decodedInfo || decodedInfo === null || !decodedInfo?.id || !decodedInfo?.email) {
             throw new ErrorHandler({
                 status: 401,

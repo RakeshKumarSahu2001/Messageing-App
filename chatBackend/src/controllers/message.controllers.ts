@@ -2,16 +2,14 @@ import AsyncHandler from "../utils/AsyncHandler";
 import { User } from "../models/user.model";
 import ErrorHandler from "../utils/ErrorHandler";
 import { Message } from "../models/message.model";
+import { getRecieverSocketInfo, io } from "../app";
 
 export const getFriendList = AsyncHandler(async (req, res) => {
     try {
-        const loggedInUserId = req.user;
-        console.log("fetching friendlist", loggedInUserId?.id)
-        const friendList = await User.find({ _id: { $ne: loggedInUserId?.id } }).select("-hashedPassword");
-        console.log("friendList : ", loggedInUserId?.id, friendList);
+        const friendList = await User.find({ _id: { $ne: req?.user?.id } }).select("-hashedPassword");
 
         if (!friendList) {
-            return res.status(200).json({
+            res.status(200).json({
                 success: true,
                 message: "No record found",
                 status: 200,
@@ -19,7 +17,7 @@ export const getFriendList = AsyncHandler(async (req, res) => {
             })
         }
 
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "data fetched successfully...",
             status: 200,
@@ -29,7 +27,7 @@ export const getFriendList = AsyncHandler(async (req, res) => {
         if (error instanceof ErrorHandler) {
             throw error
         }
-        return res.status(500).json({
+        res.status(500).json({
             success: false,
             status: 500,
             message: "Something went wrong while fetching the friendlist..."
@@ -54,9 +52,8 @@ export const getMessage = AsyncHandler(async (req, res) => {
                 { recieverId: myId, senderId: id }
             ]
         });
-        console.log("userChat", userChat);
 
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             status: 200,
             message: "Messages fetched successfully...",
@@ -66,14 +63,13 @@ export const getMessage = AsyncHandler(async (req, res) => {
         if (error instanceof ErrorHandler) {
             throw error
         }
-        return res.status(500).json({
+        res.status(500).json({
             success: false,
             status: 500,
             message: "Something went wrong while fetching the friendlist..."
         })
     }
 })
-
 
 export const sendMessage = AsyncHandler(async (req, res) => {
     const { id: recieverId } = req.params;
@@ -91,14 +87,20 @@ export const sendMessage = AsyncHandler(async (req, res) => {
         const newMessage=await Message.create({
             senderId:myId,
             recieverId:recieverId,
-            text:body?.text,
+            text:body?.message,
             image:body?.image
         });
 
+        const recieverSocketId=getRecieverSocketInfo(recieverId);
+
+        if(recieverSocketId){
+           io.to(recieverSocketId).emit("newMessage",newMessage); 
+        }
+
         console.log("newMessage : ",newMessage);
 
-        return res.status(201).json({
-            success:false,
+        res.status(201).json({
+            success:true,
             messsage:"Message send successfully...",
             status:200
         });
@@ -106,7 +108,7 @@ export const sendMessage = AsyncHandler(async (req, res) => {
         if (error instanceof ErrorHandler) {
             throw error;
         }
-        return res.status(500).json({
+        res.status(500).json({
             success: false,
             status: 500,
             message: "Something went wrong while fetching the friendlist..."

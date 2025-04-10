@@ -14,7 +14,7 @@ type loginProps = {
 
 function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<loginProps>();
-  const { isLoggedIn, loginAction } = useAuthStore();
+  const { isLoggedIn, loginAction,authUser } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center py-12 sm:px-6 l:px- bg-gray-100">
+    <div className="min-h-screen flex flex-col justify-center items-center py-12 sm:px-6 l:px- bg-gray-900">
       <div className="sm:mx-auto sm:w-full sm:max-w-md my-10">
         <h2 className="mt-6 text-center font-bold text-gray-900 tracking-tight">Chat App</h2>
       </div>

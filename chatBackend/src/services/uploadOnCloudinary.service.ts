@@ -17,13 +17,12 @@ async function uploadOnCloudinary(localfilePath:string) {
         // Upload an image
         const uploadResult = await cloudinary.uploader
             .upload(
-                'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
-                public_id: 'shoes',
+                localfilePath, {
+                    resource_type: "auto",
             }
             );
 
             fs.unlinkSync(localfilePath);
-            console.log("uploadResult",uploadResult);
 
             return uploadResult;
     } catch (error) {
